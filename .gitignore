@@ -4,6 +4,9 @@
 # 수집 데이터 (용량 큼)
 collected_datas/
 
+# 로그
+logs/
+
 # 벡터DB
 chroma_db/
 
