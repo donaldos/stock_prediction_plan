@@ -545,7 +545,7 @@ def main() -> None:
         )
 
     # ── LangGraph 오케스트레이션 ──────────────────────────────
-    if do_orchestrate:
+    if do_orchestrate or do_all:
         if run_dir is None:
             run_dir = _find_latest_run_dir()
             if run_dir is None:
