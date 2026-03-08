@@ -1,0 +1,54 @@
+name: Daily Pipeline
+
+on:
+  # 매일 오후 6시 KST (= 09:00 UTC) 실행 — 장 마감(15:30 KST) 후
+  schedule:
+    - cron: "0 9 * * 1-5"   # 평일(월~금)만 실행
+  # 수동 실행도 가능
+  workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "추가 인자 (예: --force-collect --force-orchestrate)"
+        required: false
+        default: ""
+
+jobs:
+  run-pipeline:
+    name: Run Stock Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # HuggingFace 모델 캐시 (BGE 재다운로드 방지)
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-bge-m3
+
+      - name: Build Docker image
+        run: docker build -t stock-pipeline:latest .
+
+      - name: Run pipeline
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          UPSTAGE_API_KEY: ${{ secrets.UPSTAGE_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          docker run --rm \
+            -e DART_API_KEY \
+            -e OPENAI_API_KEY \
+            -e ANTHROPIC_API_KEY \
+            -e UPSTAGE_API_KEY \
+            -e GOOGLE_API_KEY \
+            -e PINECONE_API_KEY \
+            -e SLACK_WEBHOOK_URL \
+            -v ~/.cache/huggingface:/root/.cache/huggingface \
+            stock-pipeline:latest \
+            python -m src.main --all ${{ github.event.inputs.extra_args }}
