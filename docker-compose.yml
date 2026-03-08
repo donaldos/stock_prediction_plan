@@ -1,0 +1,18 @@
+services:
+  stock-pipeline:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./collected_datas:/app/collected_datas
+      - ./chroma_db:/app/chroma_db
+      - ./logs:/app/logs
+      - huggingface_cache:/root/.cache/huggingface
+    # 기본: 전체 파이프라인 실행
+    # 개별 단계 실행 예시:
+    #   docker compose run --rm stock-pipeline python -m src.main --collect
+    #   docker compose run --rm stock-pipeline python -m src.main --orchestrate
+    command: ["python", "-m", "src.main", "--all"]
+
+volumes:
+  huggingface_cache:
