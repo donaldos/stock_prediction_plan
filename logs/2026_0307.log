@@ -1,0 +1,411 @@
+2026-03-07 07:20:09 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:20:09 [INFO    ] main.main:244 — 파이프라인 시작 — args=['--all']
+2026-03-07 07:20:09 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:20:09 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:20:09 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:20:09 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:20:09 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:20:09 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:20:09 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:20:09 [INFO    ] main._run_collect:163 — === 수집 단계 시작 ===
+2026-03-07 07:20:09 [INFO    ] collector.collect_and_save:69 — 수집 시작 — run_dir=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07
+2026-03-07 07:20:09 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=krx_ohlcv label=국내 주가 OHLCV
+2026-03-07 07:20:14 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=krx_ohlcv
+2026-03-07 07:20:14 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=dart_disclosure label=기업 공시
+2026-03-07 07:20:18 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=dart_disclosure
+2026-03-07 07:20:18 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=naver_news label=뉴스
+2026-03-07 07:20:20 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=naver_news
+2026-03-07 07:20:20 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=dart_financial label=재무제표
+2026-03-07 07:20:21 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=dart_financial
+2026-03-07 07:20:21 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=us_price label=미국 반도체 주가
+2026-03-07 07:20:23 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=us_price
+2026-03-07 07:20:23 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=sox_index label=SOX 지수
+2026-03-07 07:20:23 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=sox_index
+2026-03-07 07:20:23 [INFO    ] collector.collect_and_save:77 — 수집중 — source_id=pdf_files label=PDF 리포트
+2026-03-07 07:20:23 [INFO    ] collector.collect_and_save:81 — 수집 완료 — source_id=pdf_files
+2026-03-07 07:20:23 [INFO    ] collector.collect_and_save:86 — 전체 수집 완료 — 저장 위치=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07
+2026-03-07 07:20:23 [INFO    ] main._run_load:199 — === 로딩 단계 시작: folder=2026_0307_07 ===
+2026-03-07 07:20:23 [INFO    ] loader.load_and_save:67 — 로딩중 — naver_news
+2026-03-07 07:20:53 [INFO    ] loader.load_and_save:71 — naver_news 로딩 완료 — 42건
+2026-03-07 07:20:53 [INFO    ] loader.load_and_save:79 — 로딩중 — dart_disclosure
+2026-03-07 07:21:08 [INFO    ] loader.load_and_save:83 — dart_disclosure 로딩 완료 — 21건
+2026-03-07 07:21:08 [INFO    ] loader.load_and_save:94 — 로딩중 — pdf_files (engine=pdfplumber)
+2026-03-07 07:21:10 [INFO    ] loader.load_and_save:98 — pdf_files 로딩 완료 — 1건
+2026-03-07 07:21:10 [INFO    ] main._run_load:207 — 로딩 단계 완료 — total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:21:10  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/loaded_docs.json
+2026-03-07 07:21:10 [INFO    ] main._run_chunk:218 — === 청킹 단계 시작: strategy=recursive folder=2026_0307_07 ===
+2026-03-07 07:21:10 [INFO    ] chunker.chunk_and_save:160 — 스냅샷 로드 완료 — 64개 Document
+2026-03-07 07:21:11 [INFO    ] chunker.chunk_and_save:164 — 청킹 시작 — strategy=recursive params={'chunk_size': 500, 'overlap': 50}
+2026-03-07 07:21:11 [INFO    ] chunker.chunk_and_save:186 — 청킹 완료 — total=853 counts={'naver_news': 196, 'dart_disclosure': 608, 'pdf': 49} 저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:21:11 [INFO    ] main._run_chunk:224 — 청킹 단계 완료 — total=853 counts={'naver_news': 196, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:21:11 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:36:42 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:36:42 [INFO    ] main.main:244 — 파이프라인 시작 — args=[]
+2026-03-07 07:37:15 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:37:15 [INFO    ] main.main:244 — 파이프라인 시작 — args=[]
+2026-03-07 07:38:43 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:38:43 [INFO    ] main.main:244 — 파이프라인 시작 — args=[]
+2026-03-07 07:38:43 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:38:43 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:38:43 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:38:43 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:38:43 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:38:43 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:38:43 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:38:43 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:38:58 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:38:58 [INFO    ] main.main:244 — 파이프라인 시작 — args=[]
+2026-03-07 07:38:58 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:38:58 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:38:58 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:38:58 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:38:58 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:38:58 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:38:58 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:38:58 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:39:09 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:39:09 [INFO    ] main.main:244 — 파이프라인 시작 — args=['--all']
+2026-03-07 07:39:09 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:39:09 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:39:09 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:39:09 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:39:09 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:39:09 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:39:09 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:39:09 [INFO    ] main._run_collect:163 — === 수집 단계 시작 ===
+2026-03-07 07:39:09 [INFO    ] collector.collect_and_save:96 — 수집 시작 — run_dir=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07  소스=7개  workers=5
+2026-03-07 07:39:09 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=krx_ohlcv
+2026-03-07 07:39:09 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=dart_disclosure
+2026-03-07 07:39:09 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=naver_news
+2026-03-07 07:39:09 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=dart_financial
+2026-03-07 07:39:09 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=us_price
+2026-03-07 07:39:10 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=krx_ohlcv
+2026-03-07 07:39:10 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=sox_index
+2026-03-07 07:39:11 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=naver_news
+2026-03-07 07:39:11 [INFO    ] collector._fetch_one:60 — 수집중 — source_id=pdf_files
+2026-03-07 07:39:11 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=pdf_files
+2026-03-07 07:39:11 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=sox_index
+2026-03-07 07:39:11 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=us_price
+2026-03-07 07:39:13 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=dart_disclosure
+2026-03-07 07:39:15 [INFO    ] collector._fetch_one:64 — 수집 완료 — source_id=dart_financial
+2026-03-07 07:39:15 [INFO    ] collector.collect_and_save:114 — 전체 수집 완료 — 저장 위치=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07
+2026-03-07 07:39:15 [INFO    ] main._run_load:199 — === 로딩 단계 시작: folder=2026_0307_07 ===
+2026-03-07 07:39:15 [INFO    ] loader.load_and_save:67 — 로딩중 — naver_news
+2026-03-07 07:39:45 [INFO    ] loader.load_and_save:71 — naver_news 로딩 완료 — 42건
+2026-03-07 07:39:45 [INFO    ] loader.load_and_save:79 — 로딩중 — dart_disclosure
+2026-03-07 07:39:59 [INFO    ] loader.load_and_save:83 — dart_disclosure 로딩 완료 — 21건
+2026-03-07 07:39:59 [INFO    ] loader.load_and_save:94 — 로딩중 — pdf_files (engine=pdfplumber)
+2026-03-07 07:40:01 [INFO    ] loader.load_and_save:98 — pdf_files 로딩 완료 — 1건
+2026-03-07 07:40:01 [INFO    ] main._run_load:207 — 로딩 단계 완료 — total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:40:01  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/loaded_docs.json
+2026-03-07 07:40:01 [INFO    ] main._run_chunk:218 — === 청킹 단계 시작: strategy=recursive folder=2026_0307_07 ===
+2026-03-07 07:40:01 [INFO    ] chunker.chunk_and_save:160 — 스냅샷 로드 완료 — 64개 Document
+2026-03-07 07:40:01 [INFO    ] chunker.chunk_and_save:164 — 청킹 시작 — strategy=recursive params={'chunk_size': 500, 'overlap': 50}
+2026-03-07 07:40:01 [INFO    ] chunker.chunk_and_save:186 — 청킹 완료 — total=843 counts={'naver_news': 186, 'dart_disclosure': 608, 'pdf': 49} 저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:40:01 [INFO    ] main._run_chunk:224 — 청킹 단계 완료 — total=843 counts={'naver_news': 186, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:40:01 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:50:32 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:50:32 [INFO    ] main.main:244 — 파이프라인 시작 — args=['--all']
+2026-03-07 07:50:32 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:50:32 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:50:32 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:50:32 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:50:32 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:50:32 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:50:32 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:50:32 [INFO    ] main._run_collect:163 — === 수집 단계 시작 ===
+2026-03-07 07:50:32 [INFO    ] main._run_collect:171 — 캐시 사용 — 수집 건너뜀: folder=2026_0307_07 files=['dart_disclosure.json', 'dart_financial.json', 'krx_ohlcv.json', 'naver_news.json', 'pdf_files.json', 'sox_index.json', 'us_price.json']
+2026-03-07 07:50:32 [INFO    ] main._run_load:199 — === 로딩 단계 시작: folder=2026_0307_07 ===
+2026-03-07 07:50:32 [INFO    ] loader.load_and_save:79 — 캐시 사용 — 기존 스냅샷 로드: total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:40:01
+2026-03-07 07:50:32 [INFO    ] main._run_load:207 — 로딩 단계 완료 — total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:40:01  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/loaded_docs.json
+2026-03-07 07:50:32 [INFO    ] main._run_chunk:218 — === 청킹 단계 시작: strategy=recursive folder=2026_0307_07 ===
+2026-03-07 07:50:32 [INFO    ] chunker.chunk_and_save:149 — 캐시 사용 — 기존 청킹 결과 로드: total=843, strategy=recursive, 저장시각=2026-03-07T07:40:01
+2026-03-07 07:50:32 [INFO    ] main._run_chunk:224 — 청킹 단계 완료 — total=843 counts={'naver_news': 186, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:50:32 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:50:46 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:50:46 [INFO    ] main.main:244 — 파이프라인 시작 — args=['--all']
+2026-03-07 07:50:46 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:50:46 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:50:46 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:50:46 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:50:46 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:50:46 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:50:46 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:50:46 [INFO    ] main._run_collect:163 — === 수집 단계 시작 ===
+2026-03-07 07:50:46 [INFO    ] collector.collect_and_save:101 — 수집 시작 — run_dir=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07  소스=7개  workers=5
+2026-03-07 07:50:46 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=krx_ohlcv
+2026-03-07 07:50:46 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=dart_disclosure
+2026-03-07 07:50:46 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=naver_news
+2026-03-07 07:50:46 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=dart_financial
+2026-03-07 07:50:46 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=us_price
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=krx_ohlcv  elapsed=1.75s
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=sox_index
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=naver_news  elapsed=1.97s
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=pdf_files
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=pdf_files  elapsed=0.00s
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=sox_index  elapsed=0.31s
+2026-03-07 07:50:48 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=us_price  elapsed=2.23s
+2026-03-07 07:50:51 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=dart_financial  elapsed=5.25s
+2026-03-07 07:50:51 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=dart_disclosure  elapsed=5.41s
+2026-03-07 07:50:51 [INFO    ] collector.collect_and_save:120 — 전체 수집 완료 — 저장 위치=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07  total_elapsed=5.41s
+2026-03-07 07:50:51 [INFO    ] main._run_load:199 — === 로딩 단계 시작: folder=2026_0307_07 ===
+2026-03-07 07:50:51 [INFO    ] loader.load_and_save:110 — 로딩 시작 — 로더 3개 병렬 실행
+2026-03-07 07:50:51 [INFO    ] loader._load_one:41 — 로딩중 — naver_news
+2026-03-07 07:50:51 [INFO    ] loader._load_one:41 — 로딩중 — dart_disclosure
+2026-03-07 07:50:51 [INFO    ] loader._load_one:41 — 로딩중 — pdf
+2026-03-07 07:50:53 [INFO    ] loader._load_one:46 — pdf 로딩 완료 — 1건  elapsed=1.61s
+2026-03-07 07:51:06 [INFO    ] loader._load_one:46 — dart_disclosure 로딩 완료 — 21건  elapsed=14.34s
+2026-03-07 07:51:22 [INFO    ] loader._load_one:46 — naver_news 로딩 완료 — 42건  elapsed=31.14s
+2026-03-07 07:51:22 [INFO    ] loader.load_and_save:137 — 전체 로딩 완료 — total=64  total_elapsed=31.15s
+2026-03-07 07:51:22 [INFO    ] main._run_load:207 — 로딩 단계 완료 — total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:51:22  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/loaded_docs.json
+2026-03-07 07:51:22 [INFO    ] main._run_chunk:218 — === 청킹 단계 시작: strategy=recursive folder=2026_0307_07 ===
+2026-03-07 07:51:22 [INFO    ] chunker.chunk_and_save:161 — 스냅샷 로드 완료 — 64개 Document
+2026-03-07 07:51:23 [INFO    ] chunker.chunk_and_save:165 — 청킹 시작 — strategy=recursive params={'chunk_size': 500, 'overlap': 50}
+2026-03-07 07:51:23 [INFO    ] chunker.chunk_and_save:191 — 청킹 완료 — total=845 counts={'naver_news': 188, 'dart_disclosure': 608, 'pdf': 49}  chunk_elapsed=0.01s  save_elapsed=0.07s
+2026-03-07 07:51:23 [INFO    ] main._run_chunk:224 — 청킹 단계 완료 — total=845 counts={'naver_news': 188, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:51:23 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:56:31 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:56:31 [INFO    ] main.main:244 — 파이프라인 시작 — args=['--all']
+2026-03-07 07:56:31 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:56:31 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:56:31 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:56:31 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:56:31 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:56:31 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:56:31 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:56:31 [INFO    ] main._run_collect:163 — === 수집 단계 시작 ===
+2026-03-07 07:56:31 [INFO    ] main._run_collect:171 — 캐시 사용 — 수집 건너뜀: folder=2026_0307_07 files=['dart_disclosure.json', 'dart_financial.json', 'krx_ohlcv.json', 'naver_news.json', 'pdf_files.json', 'sox_index.json', 'us_price.json']
+2026-03-07 07:56:32 [INFO    ] main._run_load:199 — === 로딩 단계 시작: folder=2026_0307_07 ===
+2026-03-07 07:56:32 [INFO    ] loader.load_and_save:79 — 캐시 사용 — 기존 스냅샷 로드: total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:51:22
+2026-03-07 07:56:32 [INFO    ] main._run_load:207 — 로딩 단계 완료 — total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:51:22  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/loaded_docs.json
+2026-03-07 07:56:32 [INFO    ] main._run_chunk:218 — === 청킹 단계 시작: strategy=recursive folder=2026_0307_07 ===
+2026-03-07 07:56:32 [INFO    ] chunker.chunk_and_save:141 — 캐시 사용 — 기존 청킹 결과 로드: total=845 (naver_news:188, dart_disclosure:608, pdf:49)  strategy=recursive  저장시각=
+2026-03-07 07:56:32 [INFO    ] main._run_chunk:224 — 청킹 단계 완료 — total=845 counts={'naver_news': 188, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:56:32 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 07:56:53 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 07:56:53 [INFO    ] main.main:244 — 파이프라인 시작 — args=['--all']
+2026-03-07 07:56:53 [INFO    ] main._log_config:123 — === tickers.json ===
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [main] 005930  삼성전자 (KRX)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 07:56:53 [INFO    ] main._log_config:132 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 07:56:53 [INFO    ] main._log_config:136 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 07:56:53 [INFO    ] main._log_config:141 — === data_sources.json ===
+2026-03-07 07:56:53 [INFO    ] main._log_config:142 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 07:56:53 [INFO    ] main._log_config:148 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 07:56:53 [INFO    ] main._log_config:152 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 07:56:53 [INFO    ] main._run_collect:163 — === 수집 단계 시작 ===
+2026-03-07 07:56:53 [INFO    ] collector.collect_and_save:101 — 수집 시작 — run_dir=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07  소스=7개  workers=5
+2026-03-07 07:56:53 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=krx_ohlcv
+2026-03-07 07:56:53 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=dart_disclosure
+2026-03-07 07:56:53 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=naver_news
+2026-03-07 07:56:53 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=dart_financial
+2026-03-07 07:56:53 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=us_price
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=krx_ohlcv  elapsed=1.77s
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=sox_index
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=naver_news  elapsed=1.91s
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=pdf_files
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=pdf_files  elapsed=0.00s
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=sox_index  elapsed=0.34s
+2026-03-07 07:56:55 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=us_price  elapsed=2.30s
+2026-03-07 07:56:59 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=dart_financial  elapsed=5.56s
+2026-03-07 07:56:59 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=dart_disclosure  elapsed=5.79s
+2026-03-07 07:56:59 [INFO    ] collector.collect_and_save:120 — 전체 수집 완료 — 저장 위치=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07  total_elapsed=5.80s
+2026-03-07 07:56:59 [INFO    ] main._run_load:199 — === 로딩 단계 시작: folder=2026_0307_07 ===
+2026-03-07 07:56:59 [INFO    ] loader.load_and_save:110 — 로딩 시작 — 로더 3개 병렬 실행
+2026-03-07 07:56:59 [INFO    ] loader._load_one:41 — 로딩중 — naver_news
+2026-03-07 07:56:59 [INFO    ] loader._load_one:41 — 로딩중 — dart_disclosure
+2026-03-07 07:56:59 [INFO    ] loader._load_one:41 — 로딩중 — pdf
+2026-03-07 07:57:01 [INFO    ] loader._load_one:46 — pdf 로딩 완료 — 1건  elapsed=1.67s
+2026-03-07 07:57:13 [INFO    ] loader._load_one:46 — dart_disclosure 로딩 완료 — 21건  elapsed=14.48s
+2026-03-07 07:57:31 [INFO    ] loader._load_one:46 — naver_news 로딩 완료 — 42건  elapsed=31.92s
+2026-03-07 07:57:31 [INFO    ] loader.load_and_save:137 — 전체 로딩 완료 — total=64  total_elapsed=31.93s
+2026-03-07 07:57:31 [INFO    ] main._run_load:207 — 로딩 단계 완료 — total=64 (naver_news:42, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T07:57:31  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/loaded_docs.json
+2026-03-07 07:57:31 [INFO    ] main._run_chunk:218 — === 청킹 단계 시작: strategy=recursive folder=2026_0307_07 ===
+2026-03-07 07:57:31 [INFO    ] chunker.chunk_and_save:150 — 스냅샷 로드 완료 — 64개 Document
+2026-03-07 07:57:31 [INFO    ] chunker.chunk_and_save:154 — 청킹 시작 — strategy=recursive params={'chunk_size': 500, 'overlap': 50}
+2026-03-07 07:57:31 [INFO    ] chunker.chunk_and_save:179 — 청킹 완료 — total=845 counts={'naver_news': 188, 'dart_disclosure': 608, 'pdf': 49}  chunk_elapsed=0.01s  save_elapsed=0.02s
+2026-03-07 07:57:31 [INFO    ] main._run_chunk:224 — 청킹 단계 완료 — total=845 counts={'naver_news': 188, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_07/chunks.json
+2026-03-07 07:57:31 [INFO    ] main.main:281 — 파이프라인 종료
+2026-03-07 09:11:59 [INFO    ] logger.setup_logging:70 — 로깅 초기화 완료 — level=INFO, log_file=/Users/donaldos/Workspace/testbed/stock_prediction_plan/logs/2026_0307.log
+2026-03-07 09:11:59 [INFO    ] main.main:279 — 파이프라인 시작 — args=['--all']
+2026-03-07 09:11:59 [INFO    ] main.main:284 — pipeline.json 로드 — pdf_engine=pdfplumber  chunk=recursive{'chunk_size': 500, 'overlap': 50}  embed=bge{'batch_size': 32}
+2026-03-07 09:11:59 [INFO    ] main._log_config:139 — === tickers.json ===
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [main] 005930  삼성전자 (KRX)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [domestic_reference] 042700  한미반도체 (KRX)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [domestic_reference] TBD  제주반도체 (KRX)  ※티커 확인 필요
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [domestic_reference] 000660  SK하이닉스 (KRX)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [us_reference] NVDA  NVIDIA (NASDAQ)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [us_reference] AMD  Advanced Micro Devices (NASDAQ)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [us_reference] INTC  Intel (NASDAQ)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [us_reference] AVGO  Broadcom (NASDAQ)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [us_reference] QCOM  Qualcomm (NASDAQ)
+2026-03-07 09:11:59 [INFO    ] main._log_config:148 — [us_index] ^SOX  PHLX 반도체 지수 (INDEX)  ※LangGraph Case C 임계값 기준 지수
+2026-03-07 09:11:59 [INFO    ] main._log_config:152 — 활성 국내=['005930', '042700', 'TBD', '000660'] 미국=['NVDA', 'AMD', 'INTC', 'AVGO', 'QCOM'] 지수=['^SOX']
+2026-03-07 09:11:59 [INFO    ] main._log_config:157 — === data_sources.json ===
+2026-03-07 09:11:59 [INFO    ] main._log_config:158 — 재시도 정책 — 최대 3회 / 30초 간격 / 최종실패→use_previous_day_data
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] krx_ohlcv  library=FinanceDataReader  schedule=daily_2x  params={'lookback_days': 30}
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] dart_disclosure  library=DART_API  schedule=daily_2x  params={'lookback_days': 7, 'report_types': ['A001', 'A002', 'F001']}
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] naver_news  library=BeautifulSoup  schedule=daily_2x  params={'base_url': 'https://finance.naver.com/item/news.nhn', 'max_articles': 20}
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] dart_financial  library=DART_API  schedule=quarterly  params={'fs_div': 'CFS'}
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] us_price  library=yfinance  schedule=daily_1x  params={'period': '2d'}
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] sox_index  library=yfinance  schedule=daily_1x  params={'ticker': '^SOX', 'period': '2d'}
+2026-03-07 09:11:59 [INFO    ] main._log_config:164 — [활성] pdf_files  library=pathlib  schedule=daily_2x  params={'directory': 'collected_datas/pdf_datas'}
+2026-03-07 09:11:59 [INFO    ] main._log_config:168 — 활성 소스 id=['krx_ohlcv', 'dart_disclosure', 'naver_news', 'dart_financial', 'us_price', 'sox_index', 'pdf_files']
+2026-03-07 09:11:59 [INFO    ] main._run_collect:179 — === 수집 단계 시작 ===
+2026-03-07 09:11:59 [INFO    ] collector.collect_and_save:101 — 수집 시작 — run_dir=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_09  소스=7개  workers=5
+2026-03-07 09:11:59 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=krx_ohlcv
+2026-03-07 09:11:59 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=dart_disclosure
+2026-03-07 09:11:59 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=naver_news
+2026-03-07 09:11:59 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=dart_financial
+2026-03-07 09:11:59 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=us_price
+2026-03-07 09:12:00 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=krx_ohlcv  elapsed=1.79s
+2026-03-07 09:12:00 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=sox_index
+2026-03-07 09:12:01 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=naver_news  elapsed=2.01s
+2026-03-07 09:12:01 [INFO    ] collector._fetch_one:61 — 수집중 — source_id=pdf_files
+2026-03-07 09:12:01 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=pdf_files  elapsed=0.00s
+2026-03-07 09:12:01 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=sox_index  elapsed=0.33s
+2026-03-07 09:12:01 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=us_price  elapsed=2.31s
+2026-03-07 09:12:04 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=dart_disclosure  elapsed=5.24s
+2026-03-07 09:12:04 [INFO    ] collector._fetch_one:67 — 수집 완료 — source_id=dart_financial  elapsed=5.89s
+2026-03-07 09:12:04 [INFO    ] collector.collect_and_save:120 — 전체 수집 완료 — 저장 위치=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_09  total_elapsed=5.89s
+2026-03-07 09:12:04 [INFO    ] main._run_load:215 — === 로딩 단계 시작: folder=2026_0307_09 ===
+2026-03-07 09:12:04 [INFO    ] loader.load_and_save:110 — 로딩 시작 — 로더 3개 병렬 실행
+2026-03-07 09:12:04 [INFO    ] loader._load_one:41 — 로딩중 — naver_news
+2026-03-07 09:12:04 [INFO    ] loader._load_one:41 — 로딩중 — dart_disclosure
+2026-03-07 09:12:04 [INFO    ] loader._load_one:41 — 로딩중 — pdf
+2026-03-07 09:12:06 [INFO    ] loader._load_one:46 — pdf 로딩 완료 — 1건  elapsed=1.66s
+2026-03-07 09:12:19 [INFO    ] loader._load_one:46 — dart_disclosure 로딩 완료 — 21건  elapsed=14.36s
+2026-03-07 09:12:34 [INFO    ] loader._load_one:46 — naver_news 로딩 완료 — 40건  elapsed=29.56s
+2026-03-07 09:12:34 [INFO    ] loader.load_and_save:137 — 전체 로딩 완료 — total=62  total_elapsed=29.57s
+2026-03-07 09:12:34 [INFO    ] main._run_load:223 — 로딩 단계 완료 — total=62 (naver_news:40, dart_disclosure:21, pdf:1)  저장시각=2026-03-07T09:12:34  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_09/loaded_docs.json
+2026-03-07 09:12:34 [INFO    ] main._run_chunk:236 — === 청킹 단계 시작: strategy=recursive params={'chunk_size': 500, 'overlap': 50} folder=2026_0307_09 ===
+2026-03-07 09:12:34 [INFO    ] chunker.chunk_and_save:150 — 스냅샷 로드 완료 — 62개 Document
+2026-03-07 09:12:34 [INFO    ] chunker.chunk_and_save:154 — 청킹 시작 — strategy=recursive params={'chunk_size': 500, 'overlap': 50}
+2026-03-07 09:12:34 [INFO    ] chunker.chunk_and_save:179 — 청킹 완료 — total=870 counts={'naver_news': 213, 'dart_disclosure': 608, 'pdf': 49}  chunk_elapsed=0.01s  save_elapsed=0.03s
+2026-03-07 09:12:34 [INFO    ] main._run_chunk:242 — 청킹 단계 완료 — total=870 counts={'naver_news': 213, 'dart_disclosure': 608, 'pdf': 49}  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_09/chunks.json
+2026-03-07 09:12:34 [INFO    ] main._run_embed:257 — === 임베딩 단계 시작: strategy=bge params={'batch_size': 32} folder=2026_0307_09 ===
+2026-03-07 09:12:34 [INFO    ] embedder.embed_and_save:145 — 청크 로드 완료 — 870개 Chunk
+2026-03-07 09:12:34 [INFO    ] embedder.embed_and_save:149 — 임베딩 시작 — strategy=bge model=BAAI/bge-m3 dim=1024 params={'batch_size': 32, 'device': None}
+2026-03-07 09:13:06 [INFO    ] bge._get_model:48 — bge-m3 모델 로딩 중 — BAAI/bge-m3
+2026-03-07 09:13:06 [INFO    ] SentenceTransformer.__init__:219 — Use pytorch device_name: mps
+2026-03-07 09:13:06 [INFO    ] SentenceTransformer.__init__:227 — Load pretrained SentenceTransformer: BAAI/bge-m3
+2026-03-07 09:13:12 [INFO    ] bge._get_model:50 — bge-m3 모델 로딩 완료
+2026-03-07 09:13:55 [INFO    ] embedder.embed_and_save:179 — 임베딩 완료 — total=870 counts={'naver_news': 213, 'dart_disclosure': 608, 'pdf': 49}  embed_elapsed=78.98s  save_elapsed=1.17s
+2026-03-07 09:13:55 [INFO    ] main._run_embed:260 — 임베딩 단계 완료 — total=870 (naver_news:213, dart_disclosure:608, pdf:49)  strategy=bge  model=BAAI/bge-m3  저장시각=2026-03-07T09:13:53  저장=/Users/donaldos/Workspace/testbed/stock_prediction_plan/collected_datas/2026_0307_09/embeddings.json
+2026-03-07 09:13:55 [INFO    ] main.main:358 — 파이프라인 종료

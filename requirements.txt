@@ -1,0 +1,41 @@
+# 환경 변수 관리
+python-dotenv
+
+# 국내 주가
+finance-datareader
+pykrx
+
+# 미국 주가 / 지수
+yfinance
+
+# 공시 / 뉴스
+requests
+beautifulsoup4
+
+# PDF 로딩 (src/data_loading/pdf_loader.py)
+# 기본: pdfplumber / 선택: pymupdf, pdfminer.six, PyPDF2
+pdfplumber        # engine="pdfplumber" (기본)
+pymupdf           # engine="pymupdf"
+pdfminer.six      # engine="pdfminer"
+PyPDF2            # engine="pypdf2"
+
+# 청킹 (src/pipeline/chunking/)
+langchain-text-splitters  # strategy="recursive"
+kss                       # strategy="sentence" — 한국어 문장 분리
+tiktoken                  # strategy="token"
+
+# 임베딩 (src/pipeline/embedding/)
+sentence-transformers     # strategy="bge" — BAAI/bge-m3 로컬 임베딩
+openai                    # strategy="upstage" 또는 "openai" — API 임베딩
+
+# 벡터DB (src/pipeline/vectordb/)
+chromadb                  # strategy="chroma" — 로컬 벡터DB (기본)
+pinecone                  # strategy="pinecone" — 관리형 클라우드 벡터DB
+
+# RAG / LLM (src/pipeline/rag/)
+anthropic                 # strategy="claude" — Claude API (기본)
+google-genai              # strategy="gemini" — Google Gemini API
+# openai 는 임베딩 섹션에서 이미 포함
+
+# 오케스트레이션 (src/pipeline/orchestration/)
+langgraph                 # LangGraph 상태 기반 워크플로우
