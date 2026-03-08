@@ -76,7 +76,7 @@
 | RAG 오케스트레이션 | 전략 패턴 직접 구현 (LangChain 미사용) | 확정 |
 | 시나리오 분기 | LangGraph StateGraph | 확정 |
 | 리포트 발송 | Slack Incoming Webhook + Block Kit | 확정 |
-| 스케줄러 | APScheduler / Celery Beat | 검토 중 |
+| 스케줄러 | GitHub Actions (cron) | 확정 |
 | 언어 | Python 3.9+ | 확정 |
 
 ---
@@ -95,7 +95,7 @@ pip install -r requirements.txt
 
 ```bash
 # 수집 → 로딩 → 청킹 → 임베딩 → 벡터DB → 오케스트레이션 → Slack 발송
-python3 -m src.main --collect --load --chunk --embed --store --orchestrate --notify
+python3 -m src.main --all
 ```
 
 ### 3. 단계별 실행
@@ -110,7 +110,18 @@ python3 -m src.main --orchestrate      # LangGraph 예측
 python3 -m src.main --notify           # Slack 발송
 ```
 
-### 4. LLM / 임베딩 전략 변경
+### 4. Docker로 실행
+
+```bash
+# 이미지 빌드 + 전체 파이프라인 실행
+docker compose up --build
+
+# 단계별 실행
+docker compose run --rm stock-pipeline python -m src.main --collect
+docker compose run --rm stock-pipeline python -m src.main --orchestrate
+```
+
+### 5. LLM / 임베딩 전략 변경
 
 ```bash
 # LLM 전략 변경 (config/pipeline.json 또는 CLI)
@@ -128,6 +139,12 @@ python3 -m src.main --embed --embed-strategy upstage
 ```
 project/
 ├── README.md                  # 프로젝트 개요 + 전체 아키텍처 (현재 파일)
+├── Dockerfile                 # 컨테이너 이미지 빌드
+├── docker-compose.yml         # 볼륨/환경변수 포함 실행 설정
+├── .github/
+│   └── workflows/
+│       ├── ci.yml             # push/PR 시 lint + Docker 빌드 검증 + Slack 알림
+│       └── schedule.yml       # 평일 18:00 KST 전체 파이프라인 자동 실행
 ├── docs/
 │   ├── 01_data_collection.md  # 데이터 수집
 │   ├── 02_chunking.md         # 청킹
@@ -167,7 +184,7 @@ project/
 | Phase 5 | LangGraph 오케스트레이션 | 06_langgraph.md | ✅ 완료 |
 | Phase 6 | Slack 리포트 발송 | 07_report_slack.md | ✅ 완료 |
 | Phase 7 | 예측 정확도 평가 및 프롬프트 튜닝 | 전체 | 미착수 |
-| Phase 8 | 스케줄러 연동 자동화 | — | 미착수 |
+| Phase 8 | 스케줄러 연동 자동화 (GitHub Actions + Docker) | — | ✅ 완료 |
 
 ---
 

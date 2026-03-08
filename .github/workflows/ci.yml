@@ -31,3 +31,39 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t stock-pipeline:ci .
+
+  notify:
+    name: Slack Notify
+    runs-on: ubuntu-latest
+    needs: [lint, docker-build]
+    # 성공/실패 모두 알림
+    if: always()
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "${{ (needs.lint.result == 'success' && needs.docker-build.result == 'success') && '✅ CI 통과' || '❌ CI 실패' }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ (needs.lint.result == 'success' && needs.docker-build.result == 'success') && '✅ *CI 통과*' || '❌ *CI 실패*' }}\n*브랜치:* `${{ github.ref_name }}`\n*커밋:* ${{ github.event.head_commit.message || github.event.pull_request.title }}\n*작성자:* ${{ github.actor }}\n*링크:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|워크플로우 보기>"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Lint: ${{ needs.lint.result }}  |  Docker Build: ${{ needs.docker-build.result }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
