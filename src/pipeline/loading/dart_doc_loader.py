@@ -85,7 +85,7 @@ def load_disclosure(
         )
         resp.raise_for_status()
         text = _extract_text_from_zip(resp.content)
-    except Exception as e:
+    except Exception:
         return None
 
     if not text.strip():

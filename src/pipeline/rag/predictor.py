@@ -110,7 +110,6 @@ class Predictor:
         current_top_k = top_k
 
         for attempt in range(1, _MAX_RETRIES + 2):  # 0차 + 최대 3회 재시도
-            is_retry = attempt > 1
             logger.info(
                 "LLM 예측 시도 %d/%d — top_k=%d  few_shot=%s",
                 attempt, _MAX_RETRIES + 1, current_top_k, use_few_shot,
@@ -199,7 +198,6 @@ class Predictor:
         query = f"{ticker} 주가 전망 실적 뉴스 공시"
 
         try:
-            from src.pipeline.embedding.embedder import embed_and_save
             from src.pipeline.embedding.snapshot import exists as emb_exists, load as emb_load
             from src.pipeline.vectordb.store import search_similar
 

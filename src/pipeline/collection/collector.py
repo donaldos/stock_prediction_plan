@@ -13,8 +13,6 @@ from datetime import datetime
 from pathlib import Path
 
 from .models import TickerConfig, DataSourceConfig
-
-logger = logging.getLogger(__name__)
 from .fetchers import (
     fetch_krx_ohlcv,
     fetch_krx_investor,
@@ -25,6 +23,8 @@ from .fetchers import (
     fetch_dart_financial,
     fetch_pdf_files,
 )
+
+logger = logging.getLogger(__name__)
 
 # 프로젝트 루트 기준 저장 경로
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]

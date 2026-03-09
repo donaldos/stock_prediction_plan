@@ -20,13 +20,13 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
-
 from . import snapshot as snap
 from .url_loader import load_from_collected as _load_news
 from .dart_doc_loader import load_from_collected as _load_dart
 from .pdf_loader import load_from_collected as _load_pdf
 from .models import Document
+
+logger = logging.getLogger(__name__)
 
 
 def _read_json(path: Path) -> dict | None:

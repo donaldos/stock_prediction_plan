@@ -93,7 +93,7 @@ def request_llm(state: PipelineState) -> PipelineState:
     """
     from src.pipeline.rag.context import build_main_context
     from src.pipeline.rag.prompt import build_messages
-    from src.pipeline.rag.predictor import _registry, _model_to_strategy
+    from src.pipeline.rag.predictor import _registry
 
     run_dir        = Path(state["run_dir"])
     ticker         = state["ticker"]

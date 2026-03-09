@@ -83,7 +83,7 @@ class PineconeStrategy(VectorDBStrategy):
         """
         collection 을 Pinecone namespace 로 사용.
         """
-        index = self._get_index()
+        self._get_index()
 
         vectors = [
             {

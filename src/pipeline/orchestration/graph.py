@@ -20,7 +20,7 @@ from src.pipeline.orchestration.state import PipelineState
 from src.pipeline.orchestration import nodes
 
 
-def build_graph() -> "CompiledGraph":
+def build_graph():
     """
     파이프라인 StateGraph를 빌드하고 컴파일하여 반환.
 

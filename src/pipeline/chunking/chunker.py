@@ -15,12 +15,12 @@ import logging
 import time
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
-
 from .base import ChunkStrategy
 from .models import Chunk
 from . import snapshot as snap
 from .strategies import FixedSizeChunker, RecursiveChunker, SentenceChunker, TokenChunker
+
+logger = logging.getLogger(__name__)
 
 # 전략 이름 → 클래스 레지스트리
 _STRATEGY_REGISTRY: dict[str, type[ChunkStrategy]] = {
