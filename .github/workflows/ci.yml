@@ -36,21 +36,30 @@ jobs:
     name: Slack Notify
     runs-on: ubuntu-latest
     needs: [lint, docker-build]
-    # 성공/실패 모두 알림
     if: always()
     steps:
+      - name: Set status
+        id: status
+        run: |
+          if [[ "${{ needs.lint.result }}" == "success" && "${{ needs.docker-build.result }}" == "success" ]]; then
+            echo "icon=✅" >> $GITHUB_OUTPUT
+            echo "label=CI 통과" >> $GITHUB_OUTPUT
+          else
+            echo "icon=❌" >> $GITHUB_OUTPUT
+            echo "label=CI 실패" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send Slack notification
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "${{ (needs.lint.result == 'success' && needs.docker-build.result == 'success') && '✅ CI 통과' || '❌ CI 실패' }}",
+        run: |
+          curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ (needs.lint.result == 'success' && needs.docker-build.result == 'success') && '✅ *CI 통과*' || '❌ *CI 실패*' }}\n*브랜치:* `${{ github.ref_name }}`\n*커밋:* ${{ github.event.head_commit.message || github.event.pull_request.title }}\n*작성자:* ${{ github.actor }}\n*링크:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|워크플로우 보기>"
+                    "text": "${{ steps.status.outputs.icon }} *${{ steps.status.outputs.label }}*\n*브랜치:* `${{ github.ref_name }}`\n*작성자:* ${{ github.actor }}\n*링크:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|워크플로우 보기>"
                   }
                 },
                 {
@@ -63,7 +72,4 @@ jobs:
                   ]
                 }
               ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            }'
