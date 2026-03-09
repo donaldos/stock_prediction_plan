@@ -18,6 +18,19 @@
       "active": true
     },
     {
+      "id": "krx_investor",
+      "label": "투자자별 순매수 동향",
+      "type": "investor_flow",
+      "library": "pykrx",
+      "market": "KRX",
+      "schedule": "daily_2x",
+      "params": {
+        "lookback_days": 7,
+        "note": "개인/기관합계/외국인합계/기타법인 순매수 일별 추이 + 주간 합계"
+      },
+      "active": true
+    },
+    {
       "id": "dart_disclosure",
       "label": "기업 공시",
       "type": "disclosure",

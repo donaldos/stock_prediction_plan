@@ -331,6 +331,116 @@ def fetch_dart_financial(tickers: list[Ticker], params: dict) -> dict:
 
 
 # ──────────────────────────────────────────
+# 투자자 동향 (외국인 보유율 + pykrx fallback)
+# ──────────────────────────────────────────
+
+def fetch_krx_investor(tickers: list[Ticker], params: dict) -> dict:
+    """
+    투자자 동향 수집.
+
+    - 1차: pykrx get_market_trading_value_by_date (개인/기관/외국인 순매수 거래대금)
+      → KRX API 세션 인증 변경으로 현재 빈 응답 반환 가능
+    - fallback: Naver Finance fchart 외국인 보유율 일별 추이
+
+    Returns:
+        {ticker: {
+            "name": str,
+            "period": str,
+            "source": "pykrx" | "naver_foreign_ratio",
+            # pykrx 성공 시
+            "daily": [{"date": str, "기관합계": int, "기타법인": int,
+                       "개인": int, "외국인합계": int}],
+            "weekly_summary": {"기관합계": int, ...},
+            # fallback 시
+            "foreign_ratio_daily": [{"date": str, "보유율": float, "변화": float}],
+            "foreign_ratio_change_7d": float,
+        }}
+    """
+    try:
+        from pykrx import stock as krx_stock
+    except ImportError as e:
+        raise ImportError("pip install pykrx") from e
+
+    lookback = params.get("lookback_days", 7)
+    end = date.today()
+    start = end - timedelta(days=lookback)
+    start_str = start.strftime("%Y%m%d")
+    end_str = end.strftime("%Y%m%d")
+
+    investor_cols = ["기관합계", "기타법인", "개인", "외국인합계"]
+    results = {}
+
+    for t in tickers:
+        try:
+            # ── 1차: pykrx KRX API ─────────────────────────────
+            df = krx_stock.get_market_trading_value_by_date(
+                start_str, end_str, t.ticker
+            )
+            if not df.empty and any(c in df.columns for c in investor_cols):
+                available = [c for c in investor_cols if c in df.columns]
+                df = df[available]
+                df.index = df.index.astype(str)
+                daily = [
+                    {"date": d, **{col: int(row[col]) for col in available}}
+                    for d, row in df.iterrows()
+                ]
+                results[t.ticker] = {
+                    "name": t.name,
+                    "period": f"{start_str}~{end_str}",
+                    "lookback_days": lookback,
+                    "source": "pykrx",
+                    "daily": daily,
+                    "weekly_summary": {col: int(df[col].sum()) for col in available},
+                }
+                continue
+
+            # ── fallback: Naver fchart 외국인 보유율 ───────────
+            import xml.etree.ElementTree as ET
+            import requests as _req
+            resp = _req.get(
+                "https://fchart.stock.naver.com/foreign.nhn",
+                params={"symbol": t.ticker, "count": lookback + 5, "requestType": "0"},
+                headers={"User-Agent": "Mozilla/5.0"},
+                timeout=10,
+            )
+            resp.raise_for_status()
+
+            items = []
+            for node in ET.fromstring(resp.content.decode("euc-kr")).iter("item"):
+                raw = node.get("data", "")
+                if "|" in raw:
+                    d, ratio = raw.split("|")
+                    items.append({"date": d, "보유율": float(ratio)})
+
+            # 날짜 필터링 (lookback 범위)
+            items = [x for x in items if x["date"] >= start_str]
+            for i, item in enumerate(items):
+                prev = items[i - 1]["보유율"] if i > 0 else item["보유율"]
+                item["변화"] = round(item["보유율"] - prev, 4)
+
+            change_7d = round(
+                (items[-1]["보유율"] - items[0]["보유율"]) if len(items) >= 2 else 0.0, 4
+            )
+
+            results[t.ticker] = {
+                "name": t.name,
+                "period": f"{start_str}~{end_str}",
+                "lookback_days": lookback,
+                "source": "naver_foreign_ratio",
+                "note": "KRX API 세션 인증 변경으로 개인/기관 데이터 수집 불가. 외국인 보유율(%)로 대체.",
+                "foreign_ratio_daily": items,
+                "foreign_ratio_change_7d": change_7d,
+            }
+
+        except Exception as e:
+            results[t.ticker] = {"name": t.name, "error": str(e)}
+
+        time.sleep(0.3)
+
+    return results
+
+
+# ──────────────────────────────────────────
 # PDF 파일 목록 스캔 (로컬 디렉터리)
 # ──────────────────────────────────────────
 

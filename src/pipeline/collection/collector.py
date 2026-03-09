@@ -17,6 +17,7 @@ from .models import TickerConfig, DataSourceConfig
 logger = logging.getLogger(__name__)
 from .fetchers import (
     fetch_krx_ohlcv,
+    fetch_krx_investor,
     fetch_us_price,
     fetch_sox_index,
     fetch_naver_news,
@@ -32,6 +33,7 @@ _COLLECTED_DIR = _PROJECT_ROOT / "collected_datas"
 # source id → fetcher 매핑
 _DISPATCH: dict = {
     "krx_ohlcv":       lambda tc, params: fetch_krx_ohlcv(tc.active_kr(), params),
+    "krx_investor":    lambda tc, params: fetch_krx_investor(tc.active_kr(), params),
     "us_price":        lambda tc, params: fetch_us_price(tc.active_us(), params),
     "sox_index":       lambda tc, params: fetch_sox_index(tc.active_index(), params),
     "naver_news":      lambda tc, params: fetch_naver_news(tc.active_kr(), params),
