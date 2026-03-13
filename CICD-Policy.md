@@ -11,7 +11,8 @@
 1. [소스 관리 전략 (GitHub)](#1-소스-관리-전략-github)
 2. [환경 독립성 확보 (Docker)](#2-환경-독립성-확보-docker)
 3. [CI 파이프라인 (GitHub Actions)](#3-ci-파이프라인-github-actions)
-4. [워크플로우 전체 흐름](#4-워크플로우-전체-흐름)
+4. [CD 파이프라인 — Staging 자동 배포](#4-cd-파이프라인--staging-자동-배포)
+5. [워크플로우 전체 흐름](#5-워크플로우-전체-흐름)
 
 ---
 
@@ -23,27 +24,37 @@
 ### 브랜치 운영 규칙
 
 ```
-main
- └── feature/기능명       ← 신규 기능 개발
- └── fix/버그명           ← 버그 수정
- └── chore/작업명         ← 설정, 문서, 인프라 변경
+main           ← 프로덕션 (안정 배포본)
+ └── staging       ← QA 환경 (기능 검증)
+      └── develop      ← 개발 통합 환경
+           └── feature/기능명   ← 신규 기능 개발
+           └── fix/버그명        ← 버그 수정
+           └── chore/작업명      ← 설정, 문서, 인프라 변경
 ```
+
+| 브랜치 | 역할 | 직접 push | CI 적용 |
+|--------|------|-----------|---------|
+| `main` | 프로덕션 안정본 | 금지 (PR만 허용) | ✅ |
+| `staging` | QA 검증 환경 | 금지 (PR만 허용) | ✅ |
+| `develop` | 개발 통합 환경 | 금지 (PR만 허용) | ✅ |
+| `feature/*` 등 | 개발 작업 | 허용 | - |
 
 | 규칙 | 내용 |
 |------|------|
-| `main` 직접 push 금지 | 반드시 PR(Pull Request)을 통해 병합 |
-| PR 병합 조건 | CI 전체 통과 필수 |
+| PR 병합 조건 | CI 전체 통과 필수 (main, staging, develop 모두 적용) |
 | 커밋 단위 | 기능 단위로 원자적(atomic) 커밋 |
 | 커밋 메시지 | `feat:`, `fix:`, `chore:`, `docs:` 접두어 사용 |
 
 ### 협업 흐름
 
 ```
-1. main 브랜치에서 feature 브랜치 생성
+1. develop 브랜치에서 feature 브랜치 생성
 2. 로컬 개발 완료 후 push
-3. GitHub에서 PR 생성
-4. CI 자동 실행 (Lint + Docker Build)
-5. CI 통과 + 코드 리뷰 승인 → main 병합
+3. develop으로 PR 생성 → CI 자동 실행 → 코드 리뷰
+4. CI 통과 + 승인 → develop 병합
+5. develop → staging PR 생성 → CI 재실행 → QA 진행
+6. QA 통과 → staging → main PR 생성 → 최종 승인
+7. main 병합 → 프로덕션 반영
 ```
 
 ---
@@ -185,31 +196,92 @@ Lint: failure | Docker Build: success
 
 ---
 
-## 4. 워크플로우 전체 흐름
+## 4. CD 파이프라인 — Staging 자동 배포
+
+### 목적
+`staging` 브랜치에 병합되는 순간 자동으로 스테이징 서버에 배포하여,
+QA 팀이 항상 최신 코드를 검증할 수 있도록 한다.
+
+### 배포 대상
+
+| 항목 | 값 |
+|------|----|
+| 서버 | `221.145.60.243` |
+| 방식 | SSH → git pull → docker compose up |
+| 트리거 | `staging` 브랜치 push |
+
+### 배포 흐름
 
 ```
-개발자 A                GitHub                  맥북 (팀원)
-   │                      │                         │
-   │  git push (feature)  │                         │
-   │─────────────────────>│                         │
-   │                      │                         │
-   │               CI 자동 실행                      │
-   │               ┌──────┴──────┐                  │
-   │               │ Lint (ruff) │                  │
-   │               │ Docker Build│                  │
-   │               └──────┬──────┘                  │
-   │                      │                         │
-   │               Slack 결과 알림 ─────────────────>│
-   │<─────────────────────│                         │
-   │                      │                         │
-   │  [CI 실패] 코드 수정  │                         │
-   │  [CI 통과] PR 생성   │                         │
-   │─────────────────────>│                         │
-   │                      │  코드 리뷰 요청 ─────────>│
-   │                      │<──── 승인 ──────────────│
-   │                      │                         │
-   │               main 브랜치 병합                   │
-   │                      │                         │
+staging 브랜치 push
+    → GitHub Actions (cd.yml) 실행
+    → SSH로 서버 접속 (appleboy/ssh-action)
+    → git pull origin staging
+    → docker compose down
+    → docker compose up -d --build
+    → Slack 배포 결과 알림 (🚀 완료 / ❌ 실패)
+```
+
+### GitHub Secrets 등록 목록 (CD 추가분)
+
+| Secret 이름 | 값 |
+|-------------|-----|
+| `STAGING_HOST` | `221.145.60.243` |
+| `STAGING_USER` | 서버 계정명 (예: `ubuntu`) |
+| `STAGING_SSH_KEY` | SSH 개인키 전체 내용 |
+| `STAGING_DEPLOY_DIR` | 서버의 프로젝트 경로 |
+
+### SSH 키 최초 설정 절차
+
+```bash
+# 1. 맥북에서 배포 전용 키 생성
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github_deploy
+
+# 2. 서버에 공개키 등록
+ssh-copy-id -i ~/.ssh/github_deploy.pub user@221.145.60.243
+
+# 3. 개인키 내용을 GitHub Secrets에 등록
+cat ~/.ssh/github_deploy  # 이 내용을 STAGING_SSH_KEY 에 붙여넣기
+```
+
+---
+
+## 5. 워크플로우 전체 흐름
+
+```
+개발자 A                GitHub                    QA / 팀원
+   │                      │                           │
+   │  git push (feature)  │                           │
+   │─────────────────────>│                           │
+   │                      │                           │
+   │   develop로 PR 생성  │                           │
+   │─────────────────────>│                           │
+   │                      │── CI (Lint + Docker) ──>  │
+   │                      │── Slack 알림 ────────────>│
+   │<─────────────────────│                           │
+   │  [CI 실패] 코드 수정  │  [CI 통과] 코드 리뷰 ────>│
+   │                      │<──────────── 승인 ────────│
+   │                      │                           │
+   │          develop 병합                            │
+   │                      │                           │
+   │   staging으로 PR 생성 │                           │
+   │─────────────────────>│                           │
+   │                      │── CI (Lint + Docker) ──>  │
+   │                      │── Slack 알림 ────────────>│
+   │                      │                           │
+   │                      │       QA 진행 ────────────│
+   │                      │<────── QA 통과 / 승인 ────│
+   │                      │                           │
+   │          staging 병합                            │
+   │                      │                           │
+   │    main으로 PR 생성   │                           │
+   │─────────────────────>│                           │
+   │                      │── CI (Lint + Docker) ──>  │
+   │                      │── Slack 알림 ────────────>│
+   │                      │<──────── 최종 승인 ────────│
+   │                      │                           │
+   │           main 병합 (프로덕션 반영)               │
+   │                      │                           │
 ```
 
 ### 매일 자동 실행 (Daily Pipeline)

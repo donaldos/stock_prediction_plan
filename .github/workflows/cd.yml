@@ -1,0 +1,47 @@
+name: CD
+
+on:
+  push:
+    branches: [staging]
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd ${{ secrets.STAGING_DEPLOY_DIR }}
+            git pull origin staging
+            docker compose down
+            docker compose up -d --build
+
+      - name: Notify Slack
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          if [ "$STATUS" = "success" ]; then
+            ICON="🚀"
+            LABEL="Staging 배포 완료"
+          else
+            ICON="❌"
+            LABEL="Staging 배포 실패"
+          fi
+          curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"blocks\": [
+                {
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"${ICON} *${LABEL}*\n*서버:* \`${{ secrets.STAGING_HOST }}\`\n*작성자:* ${{ github.actor }}\n*링크:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|워크플로우 보기>\"
+                  }
+                }
+              ]
+            }"
